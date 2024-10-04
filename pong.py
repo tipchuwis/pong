@@ -33,7 +33,7 @@ while True: # Este es para que sí pase algo :3
     pygame.draw.circle(screen, BLACK, (100,100), 10)'''
 
     
-
+    # ecolecua
 
     # Actualizar pantalla
     pygame.display.flip()
