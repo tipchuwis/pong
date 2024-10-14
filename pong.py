@@ -72,6 +72,7 @@ while True: # Mientras que el ciclo continúe? fue
                     player_2_speed_y=0
                 if event.key == pygame.K_DOWN:
                     player_2_speed_y=0
+
         
         else:
             player_1_x=50
@@ -127,6 +128,18 @@ while True: # Mientras que el ciclo continúe? fue
     # Colisión de la pelota
     if pelota.colliderect(player_1) or pelota.colliderect(player_2):
         pelota_speed_x *=-1
+        if pelota_speed_x > 0:
+            pelota_speed_x += 0.5  # Aumenta la velocidad en X si va hacia la derecha
+        else:
+            pelota_speed_x -= 0.5 # Aumenta la velocidad en X si va hacia la izquierda
+
+        if pelota_speed_y > 0:
+            pelota_speed_y += 0.5 # Aumenta la velocidad en Y si va hacia abajo
+        else:
+            pelota_speed_y -= 0.5 # Aumenta la velocidad en Y si va hacia arriba
+    if game_over:
+        pelota_speed_y=3
+        pelota_speed_x=3
 
     # Actualizar pantalla
     pygame.display.flip()
