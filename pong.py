@@ -8,49 +8,120 @@ GREEN =     (   0,  255,    0)
 RED =       ( 255,    0,    0)
 BLUE =      (   0,    0,  255)
 
+# Definir alto y ancho de jugadores
+player_h=100
+player_w=15
+
 # Pantalla
 screen_size = (800,600) # Variable que me dice cuánto mide la pantalla que vamos a inicializar en pixeles.
 screen = pygame.display.set_mode(screen_size) # Aquí decimos que pygame haga un display del modo de screen_size.
 clock = pygame.time.Clock() # Este reloj es para que nunca se nos acabe la pantalla, que no se abra y cierre en 1 segundo.
 
-# Coordenadas del cuadro
+# Coordenadas de los jugadores
+player_1_x=50
+player_1_y=300 - 50
+player_1_speed_y=0
 
-cord_x= 400
-cord_y= 200
+player_2_x=750 - player_w
+player_2_y=300 - 50
+player_2_speed_y=0
 
-# Definir la velocidad
-speed_x=3 # Es decir, que en x (y y), se va a mover cada vez 3 pixeles empezando en 400, luego 403, luego 406, y así sucesivamente.
-speed_y=3
+# Definir la velocidad de la pelota
+pelota_x=400
+pelota_y=300
+pelota_speed_y=3
+pelota_speed_x=3
 
-# Definir FPS
+# Game over
+game_over = False
 
-
-while True: # Este es para que sí pase algo :3
+while not game_over: # Este es para que sí pase algo :3
     for event in pygame.event.get(): # Este FOR imprime en la consola todos los eventos en la ventanita.
     #         print(event) Como realmente no hemos hecho mucho, sólo nos va a imprimir la posición del mouse.
         if event.type == pygame.QUIT:
+            game_over = True
             sys.exit()
 
-    if (cord_x > 720 or cord_x < 0):
-        speed_x*= -1
-    if (cord_y > 520 or cord_y < 0):
-        speed_y*= -1
+        # Movimiento de Jugadores
+        if event.type == pygame.KEYDOWN:
+             #P1 avanza
+             if event.key == pygame.K_w:
+                 player_1_speed_y=-3
+             if event.key == pygame.K_s:
+                 player_1_speed_y=+3
 
-    cord_x+=speed_x
-    cord_y+=speed_y
+            #P2 avanza
+             if event.key == pygame.K_UP:
+                 player_2_speed_y=-3
+    
+             if event.key == pygame.K_DOWN:
+                 player_2_speed_y=+3
+        
+        if event.type == pygame.KEYUP:
+            # P1 para
+             if event.key == pygame.K_w:
+                player_1_speed_y=0
+             if event.key == pygame.K_s:
+                player_1_speed_y=0
+            
+            # P2 para
+             if event.key == pygame.K_UP:
+                player_2_speed_y=0
+             if event.key == pygame.K_DOWN:
+                player_2_speed_y=0
+        
+        # Límites de jugadores
+        if player_1_y > 480:
+            player_1_y = 480
+        if player_1_y < 30:
+            player_1_y = 30
+
+        if player_2_y > 480:
+            player_2_y = 480
+        if player_2_y < 30:
+            player_2_y = 30
+
+        # La pelota rebota
+        if pelota_y > 550 or pelota_y < 40:
+            pelota_speed_y *=-1
+        if pelota_x > 730 or pelota_x < 70:
+            pelota_speed_x *=-1
+        
+    
+        # La pelota reespawnee después de perder
+       # if pelota_x > 480:
+        #    pelota_x=400
+        #    pelota_y=300
+            # Invertir el lado de la pelota
+         #   pelota_speed_x*=-1
+         #   pelota_speed_y*=-1
+
+       # if pelota_x < 0:
+       #     pelota_x=400
+        #    pelota_y=300
+       #     # Invertir el lado de la pelota
+        #    pelota_speed_x*=-1
+       #     pelota_speed_y*=-1
+
+
+    player_1_y+=player_1_speed_y
+    player_2_y+=player_2_speed_y
+
+    pelota_x+=pelota_speed_x
+    pelota_y+=pelota_speed_y
     
     # Color de fondo
     screen.fill(BLACK)
     #-------------------Zona de dibujo
-    pygame.draw.rect(screen, RED, (cord_x,cord_y,80,80)) # Llamamos a pygame, el método draw y luego rect para hacer
-    '''for i in range (100,700,100):               un rectángulo. De ahí le indicamos coordenadas en x, y, base y altura.
-        pygame.draw.rect(screen,WHITE,(i,230,50,50))
-        pygame.draw.line(screen, GREEN, (i,0), (i,100),5)'''
+    player_1=pygame.draw.rect(screen, WHITE, (player_1_x,player_1_y,player_w,player_h))
+    player_2=pygame.draw.rect(screen, WHITE, (player_2_x,player_2_y,player_w,player_h))
+    pelota=pygame.draw.circle(screen, WHITE,(pelota_x,pelota_y),10)
     #-------------------Zona de dibujo
-    '''screen.fill(WHITE) # Le estamos diciendo que ahora, nuestra variable de pantalla se llene de blanco.
-    pygame.draw.line(screen, GREEN, [0,100], [200,300], 5)
-    pygame.draw.rect(screen, RED, (100,100,80,80))
-    pygame.draw.circle(screen, BLACK, (100,100), 10)'''
+
+    # Colisión de la pelota
+    if pelota.colliderect(player_1) or pelota.colliderect(player_2):
+        pelota_speed_x *=-1
+        pelota_speed_y *=-1
 
     # Actualizar pantalla
     pygame.display.flip()
