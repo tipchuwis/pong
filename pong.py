@@ -35,9 +35,9 @@ pelota_speed_x=3
 # Game over
 game_over = False
 
-while not game_over: # Este es para que sí pase algo :3
-    for event in pygame.event.get(): # Este FOR imprime en la consola todos los eventos en la ventanita.
-    #         print(event) Como realmente no hemos hecho mucho, sólo nos va a imprimir la posición del mouse.
+while not game_over: # Mientras que NO hayamos perdido:
+    for event in pygame.event.get(): # Este FOR revisa absolutamente todos los eventos, si movemos el mouse encima,
+    #                                   el evento va a registrarse y pasará por todas las condicionales.
         if event.type == pygame.QUIT:
             game_over = True
             sys.exit()
@@ -86,6 +86,16 @@ while not game_over: # Este es para que sí pase algo :3
             pelota_speed_y *=-1
         if pelota_x > 730 or pelota_x < 70:
             pelota_speed_x *=-1
+
+        # La pelota reespawnea si se sale de los límites
+        if pelota_y > 600 or pelota_y < 20:
+            pelota_y=300
+            pelota_x=400
+            game_over = True
+        if pelota_x > 800 or pelota_x < 50:
+            pelota_y=300
+            pelota_x=400
+            game_over = True
         
     
         # La pelota reespawnee después de perder
@@ -121,7 +131,6 @@ while not game_over: # Este es para que sí pase algo :3
     # Colisión de la pelota
     if pelota.colliderect(player_1) or pelota.colliderect(player_2):
         pelota_speed_x *=-1
-        pelota_speed_y *=-1
 
     # Actualizar pantalla
     pygame.display.flip()
