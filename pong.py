@@ -35,40 +35,52 @@ pelota_speed_x=3
 # Game over
 game_over = False
 
-while not game_over: # Mientras que NO hayamos perdido:
+while True: # Mientras que el ciclo continúe? fue
     for event in pygame.event.get(): # Este FOR revisa absolutamente todos los eventos, si movemos el mouse encima,
     #                                   el evento va a registrarse y pasará por todas las condicionales.
         if event.type == pygame.QUIT:
-            game_over = True
             sys.exit()
 
-        # Movimiento de Jugadores
-        if event.type == pygame.KEYDOWN:
-             #P1 avanza
-             if event.key == pygame.K_w:
-                 player_1_speed_y=-3
-             if event.key == pygame.K_s:
-                 player_1_speed_y=+3
+        if game_over and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            game_over = False
 
-            #P2 avanza
-             if event.key == pygame.K_UP:
-                 player_2_speed_y=-3
+        if not game_over:
+            # Movimiento de Jugadores
+            if event.type == pygame.KEYDOWN:
+                 #P1 avanza
+                if event.key == pygame.K_w:
+                     player_1_speed_y=-3
+                if event.key == pygame.K_s:
+                     player_1_speed_y=+3
+
+                #P2 avanza
+                if event.key == pygame.K_UP:
+                    player_2_speed_y=-3
     
-             if event.key == pygame.K_DOWN:
-                 player_2_speed_y=+3
+                if event.key == pygame.K_DOWN:
+                    player_2_speed_y=+3
         
-        if event.type == pygame.KEYUP:
-            # P1 para
-             if event.key == pygame.K_w:
-                player_1_speed_y=0
-             if event.key == pygame.K_s:
-                player_1_speed_y=0
+            if event.type == pygame.KEYUP:
+                # P1 para
+                if event.key == pygame.K_w:
+                    player_1_speed_y=0
+                if event.key == pygame.K_s:
+                    player_1_speed_y=0
             
-            # P2 para
-             if event.key == pygame.K_UP:
-                player_2_speed_y=0
-             if event.key == pygame.K_DOWN:
-                player_2_speed_y=0
+                # P2 para
+                if event.key == pygame.K_UP:
+                    player_2_speed_y=0
+                if event.key == pygame.K_DOWN:
+                    player_2_speed_y=0
+        
+        else:
+            player_1_x=50
+            player_1_y=300 - 50
+            player_1_speed_y=0
+
+            player_2_x=750 - player_w
+            player_2_y=300 - 50
+            player_2_speed_y=0
         
         # Límites de jugadores
         if player_1_y > 480:
@@ -96,29 +108,13 @@ while not game_over: # Mientras que NO hayamos perdido:
             pelota_y=300
             pelota_x=400
             game_over = True
-        
-    
-        # La pelota reespawnee después de perder
-       # if pelota_x > 480:
-        #    pelota_x=400
-        #    pelota_y=300
-            # Invertir el lado de la pelota
-         #   pelota_speed_x*=-1
-         #   pelota_speed_y*=-1
-
-       # if pelota_x < 0:
-       #     pelota_x=400
-        #    pelota_y=300
-       #     # Invertir el lado de la pelota
-        #    pelota_speed_x*=-1
-       #     pelota_speed_y*=-1
 
 
     player_1_y+=player_1_speed_y
     player_2_y+=player_2_speed_y
-
-    pelota_x+=pelota_speed_x
-    pelota_y+=pelota_speed_y
+    if not game_over:
+        pelota_x+=pelota_speed_x
+        pelota_y+=pelota_speed_y
     
     # Color de fondo
     screen.fill(BLACK)
